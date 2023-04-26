@@ -1,60 +1,61 @@
 
-from distutils.log import debug
 from flask import Flask, jsonify
 from pymongo import MongoClient
-import os
+import connect
 import subprocess
 
 # Initiate Flask api
 api = Flask(__name__)
 
-# Get MongoDB Client
-def get_db():
-    client = MongoClient(host='test_mongodb',
-                         port=27017, 
-                         username='root', 
-                         password='pass',
-                         authSource="admin")
-    
-    db = client["animal_db"]
-    return db
 
 # Routes
 @api.route('/')
 def ping_server():
     return "Welcome to the world of Mongo!"
 
+
 @api.route('/animals')
 def get_stored_animals():
-    db=""
+    '''
+    Returns animals in database
+    '''
+    db=None
     try:
-        db = get_db()
-        _animals = db.animal_tb.find()
-        animals = [{"id": animal["id"], "name": animal["name"], "type": animal["type"]} for animal in _animals]
+        db = connect.get_db()
+        animals = [{"id": animal["id"], "name": animal["name"], "type": animal["type"]} for animal in db.animal_tb.find()]
         return jsonify({"animals": animals})
-    except:
-        pass
+    except Exception as e:
+        api.logger.info(e)
+        jsonify({'error': "Connection failed"})
     finally:
         if type(db)==MongoClient:
             db.close()
 
+
 @api.route('/times')
 def get_times():
+    '''
+    Returns system start ups
+    '''
     # Copy output.txt from simulator into api
     try:
-        contents = subprocess.check_call(["sshpass","-p","admin","scp","-o","StrictHostKeyChecking=no","admin@simulator:/app/output.txt","/api/output_copy.txt"])
-        print(contents)
-    except:
+        bash_command = ["sshpass","-f","pass_file","ssh","admin@simulator","cat /app/output.txt"]
+        last_login = subprocess.check_output(bash_command).decode()
+        api.logger.info('contents retrieved')
+    except Exception as e:
+        api.logger.info(e)
         return jsonify({'error': "Connection failed"})
     
     # Open the file and read its contents
-    os.getcwd()
+    with open('/api/output_copy.txt', 'a') as f:
+        f.write(last_login)
+
     with open('/api/output_copy.txt', 'r') as f:
-        contents = f.read()
+        logins = f.read()
 
     # Return the contents of the file as a JSON response
-    return jsonify({'contents': contents})
+    return jsonify({'contents': logins})
     
 
 if __name__=='__main__':
-    api.run(host="0.0.0.0", port=5000, debug=True)
+    api.run(host="0.0.0.0", port=5000, debug=True)  
