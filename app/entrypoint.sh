@@ -5,8 +5,10 @@ service ssh start
 
 OUTFILE=output.txt
 
+rm -rf ${OUTFILE}
+
+date +'%F %T' >> ${OUTFILE}
 
 while [ true ]; do
-    date +'%F %T' >> ${OUTFILE}
     sleep 60
 done
