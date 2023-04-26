@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Logs start up
+service ssh start
+
 OUTFILE=output.txt
 
 
