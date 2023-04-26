@@ -12,6 +12,10 @@ services:
     command: python -u api.py
     ports:
       - "5000:5000"
+    environment:
+      - DB_USERNAME=root
+      - DB_PASSWORD=pass
+      - DB_AUTH_SOURCE=admin
     volumes:
       - ./api:/api
     depends_on:
