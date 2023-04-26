@@ -13,7 +13,9 @@ COPY . /app
 # Set the working directory to /app
 WORKDIR /app
 
-RUN useradd -rm -d /home/admin -s /bin/bash -p admin admin
+RUN useradd -rm -d /home/admin -s /bin/bash -p admin admin \
+ && usermod -aG _ssh admin \
+ && echo "admin:admin" | chpasswd
 
 EXPOSE 22
 
