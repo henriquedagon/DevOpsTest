@@ -14,9 +14,14 @@ spec:
       containers:
       - name: api
         image: bcdscrypto/devopstest-api:latest
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "500m"
         ports:
         - containerPort: 5000
+        env:
+          - name: DB_HOST
+            value: db-h
+          - name: DB_USERNAME
+            value: root
+          - name: DB_PASSWORD
+            value: pass
+          - name: DB_AUTH_SOURCE
+            value: admin

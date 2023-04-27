@@ -1,1 +1,4 @@
+# Compiled Python bytecode
+*.py[cod]
+
 output*
