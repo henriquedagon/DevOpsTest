@@ -6,6 +6,7 @@ services:
     command: ["python", "script.py"]
     volumes:
       - ./app:/app
+      - shared-volume:/app/output
 
   api:
     build: ./api
@@ -18,6 +19,7 @@ services:
       - DB_AUTH_SOURCE=admin
     volumes:
       - ./api:/api
+      - shared-volume:/api/output
     depends_on:
       - db
       - simulator
@@ -33,3 +35,6 @@ services:
       - ./init-db.js:/docker-entrypoint-initdb.d/init-db.js:ro
     ports:
       - 27017:27017
+
+volumes:
+  shared-volume:

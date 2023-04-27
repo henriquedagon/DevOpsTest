@@ -3,7 +3,7 @@
 # Logs start up
 service ssh start
 
-OUTFILE=output.txt
+OUTFILE=output/output.txt
 
 rm -rf ${OUTFILE}
 

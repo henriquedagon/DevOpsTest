@@ -39,13 +39,13 @@ def get_times():
     '''
     # Copy output.txt from simulator into api
     try:
-        bash_command = ["sshpass","-f","pass_file","ssh","admin@simulator","cat /app/output.txt"]
-        last_login = subprocess.check_output(bash_command).decode()
-        api.logger.info('contents retrieved')
+        with open('/api/output/output.txt', 'r') as f:
+            last_login = f.read()
+        api.logger.info(f'last_login: {last_login}')
     except Exception as e:
         api.logger.info(e)
         return jsonify({'error': "Connection failed"})
-    
+
     # Open the file and read its contents
     with open('/api/output_copy.txt', 'a') as f:
         f.write(last_login)
