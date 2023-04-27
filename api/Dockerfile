@@ -18,4 +18,4 @@ RUN pip install -r requirements.txt
 # Copy api folder into the container directory
 COPY . .
 
-# CMD ["python", "-u", "api.py"]
+CMD ["python", "-u", "api.py"]
